@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:alpine3.19
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: kusoge
+      POSTGRES_DB: KUSOGE_SHOP
+    ports:
+      - 5432:5432
+  # user-service:
+  #   build:
+  #     context: ./user-service
+  #   restart: always
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     PG_HOST: postgres
+  #     PG_DB_NAME: KUSOGE_SHOP
+  #     PG_USER: kusoge
+  #     PG_PASSWORD: example
+  #     PG_AUTH_TABLE: auth_user
+  # frontend:
+  #   build:
+  #     context: ./frontend-gateway
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     AUTH_SVC: user-service
+
+# Init sql
+# CREATE TABLE auth_user (
+#     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+#     email VARCHAR (255) NOT NULL,
+#     name VARCHAR (255) NOT NULL,
+#     password VARCHAR (255) NOT NULL
+# );
+
+# INSERT INTO auth_user (email, name, password) VALUES ('iambatmanthegoat@gmail.com', miracle, '123456');

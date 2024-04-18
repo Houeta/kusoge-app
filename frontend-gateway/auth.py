@@ -1,18 +1,36 @@
 import os, requests
 
-AUTH_SVC = os.getenv('AUTH_SVC') # user-service
+AUTH_SVC = os.getenv('AUTH_SVC', 'localhost') # user-service
+AUTH_PORT = os.getenv('AUTH_PORT', 5000) # 5000
 
 def login(request):
-    auth = request.authorization
+    auth = {
+        'email': request.form.get('email'),
+        'password': request.form.get('password')
+    }
     if not auth:
-        return None, ("missing credentials", 401)
-    basic_auth = (auth.username, auth.password)
+        return "missing credentials", 401
+    #basic_auth = (auth['username'], auth['password'])
     
     response = requests.post(
-        f"http://{AUTH_SVC}/login", auth=basic_auth
+        f"http://{AUTH_SVC}:{AUTH_PORT}/login", data=auth
     )
     
-    if response.status_code == 200:
-        return response.text, None
-    else:
-        return None, (response.text, response.status_code)
+
+    return response.text, response.status_code
+
+def signup(request):
+    auth = {
+        'email': request.form.get('email'),
+        'name': request.form.get('name'),
+        'password': request.form.get('password'),
+    }
+    if not auth:
+        return "missing credentials", 401
+    
+    response = requests.post(
+        f"http://{AUTH_SVC}:{AUTH_PORT}/signup", data=auth
+    )
+    
+
+    return response.text, response.status_code
