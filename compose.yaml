@@ -8,35 +8,32 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: kusoge
       POSTGRES_DB: KUSOGE_SHOP
+  user-service:
+    build:
+      context: ./user-service
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PG_AUTH_TABLE: auth_user
+    env_file:
+      - db.env
+  frontend:
+    build:
+      context: ./frontend-gateway
+    restart: always
     ports:
-      - 5432:5432
-  # user-service:
-  #   build:
-  #     context: ./user-service
-  #   restart: always
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     PG_HOST: postgres
-  #     PG_DB_NAME: KUSOGE_SHOP
-  #     PG_USER: kusoge
-  #     PG_PASSWORD: example
-  #     PG_AUTH_TABLE: auth_user
-  # frontend:
-  #   build:
-  #     context: ./frontend-gateway
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     AUTH_SVC: user-service
-
-# Init sql
-# CREATE TABLE auth_user (
-#     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-#     email VARCHAR (255) NOT NULL,
-#     name VARCHAR (255) NOT NULL,
-#     password VARCHAR (255) NOT NULL
-# );
-
-# INSERT INTO auth_user (email, name, password) VALUES ('iambatmanthegoat@gmail.com', miracle, '123456');
+      - 8080:8080
+    environment:
+      AUTH_SVC: user-service
+      AUTH_PORT: 5000
+      PROD_SVC_HOSTNAME: product-service
+      PROD_SVC_PORT: 5000
+  product-service:
+    build:
+      context: ./product-catalog
+    restart: always
+    env_file:
+      - db.env
+    environment:
+      PG_PRODUCT_TABLE: "products"

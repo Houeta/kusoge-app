@@ -1,15 +1,8 @@
-import psycopg2, jwt
-from datetime import datetime, timezone, timedelta
+import psycopg2
 from flask import Flask, request
-from os import getenv, environ
+from os import getenv
 
 app = Flask(__name__)
-
-  #     PG_HOST: postgres
-  #     PG_DB_NAME: KUSOGE_SHOP
-  #     PG_USER: kusoge
-  #     PG_PASSWORD: example
-  #     PG_AUTH_TABLE: auth_user
 
 def _get_db_connection():
     conn = psycopg2.connect(

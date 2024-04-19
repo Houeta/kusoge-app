@@ -1,7 +1,10 @@
+import os
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_manager, LoginManager, login_required, logout_user, current_user
-from __init__ import User
+import requests
 
+from __init__ import User
 import auth
 
 app = Flask(__name__, template_folder='html-tpl')
@@ -9,14 +12,44 @@ app.secret_key = "super secret key"
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
+# ENV VARIABLES
+prod_svc_hostname = os.getenv('PROD_SVC_HOSTNAME')
+prod_svc_port = os.getenv('PROD_SVC_PORT')
+prod_url = f"http://{prod_svc_hostname}:{prod_svc_port}"
     
 @login_manager.user_loader
 def load_user(id):
     return User(id)
+    
 # Main page
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
+
+# Function for product catalog
+@app.route("/catalog")
+def catalog():
+    products = requests.get(
+        f"{prod_url}/products"
+    )
+    return render_template('catalog.html', products=products.json())
+
+@app.route('/catalog', methods=['POST'])
+def catalog_post():
+    product = requests.post(
+        f'{prod_url}/products', data=request.json
+    )
+    return render_template('catalog.html', product=product.text)
+
+@app.route('/catalog/<int:product_id>', methods=['PUT', 'DELETE'])
+def catalog_put(product_id):
+    product = requests.put(
+        url=f"{prod_url}/products/{product_id}",
+        data=request.json,
+    )
+    return render_template('catalog.html', product=product.text)
+
 
 # Function for profile page
 @app.route('/profile')
@@ -59,6 +92,10 @@ def signup_post():
         return redirect(url_for('signup'))
     else:
         return text, status_code
+
+@app.route('/order', methods=['POST'])
+def order():
+    pass
 
 # Logout page
 @app.route('/logout')
