@@ -1,16 +1,15 @@
 from os import getenv
 
 from flask import Flask, request, jsonify
-from sqlalchemy import Column, Integer, String, Numeric, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, String, Float, create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 # ENV VARIABLES
-db_host = getenv('PG_HOST')
-db_password = getenv('PG_PASSWORD')
-db_user = getenv('PG_USER')
-db_name = getenv('PG_DB_NAME')
-db_table_name = getenv('PG_PRODUCT_TABLE')
+db_host = getenv('PG_HOST', 'localhost')
+db_password = getenv('PG_PASSWORD', 'example')
+db_user = getenv('PG_USER', 'kusoge')
+db_name = getenv('PG_DB_NAME', 'KUSOGE_SHOP')
+db_table_name = getenv('PG_PRODUCT_TABLE', 'products')
 
 
 Base = declarative_base()
@@ -21,7 +20,10 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String)
-    price = Column(Numeric, nullable=False)
+    price = Column(Float, nullable=False)
+    
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 # Init to postgres
 engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}/{db_name}')
@@ -35,8 +37,8 @@ def create_product(name, description, price):
     session.commit()
 
 def get_all_products():
-    return session.query(Product).all()
-
+    query = session.query(Product).all()
+    return query
 def update_product(product_id, new_data):
     product = session.query(Product).get(product_id)
     if product:
@@ -55,13 +57,12 @@ app = Flask(__name__)
 @app.route('/products', methods=['GET'])
 def get_products():
     products = get_all_products()
-    print(products)
-    return jsonify({key:value for key, value in products})
+    return jsonify([product.as_dict() for product in products])
 
 @app.route('/products', methods=['POST'])
 def add_product():
     data = request.json
-    create_product(data['name'], data['description'], data['[price]'])
+    create_product(data['name'], data['description'], data['price'])
     return jsonify({'message': 'Product created successfully'}), 200
 
 @app.route('/products/<int:product_id>', methods=['PUT'])

@@ -38,7 +38,7 @@ def catalog():
 @app.route('/catalog', methods=['POST'])
 def catalog_post():
     product = requests.post(
-        f'{prod_url}/products', data=request.json
+        f'{prod_url}/products', json=request.json
     )
     return render_template('catalog.html', product=product.text)
 
@@ -46,7 +46,7 @@ def catalog_post():
 def catalog_put(product_id):
     product = requests.put(
         url=f"{prod_url}/products/{product_id}",
-        data=request.json,
+        json=request.json,
     )
     return render_template('catalog.html', product=product.text)
 
