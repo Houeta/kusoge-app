@@ -14,4 +14,4 @@ RUN apk update && \
 RUN pip install -r requirments.txt
 
 ENTRYPOINT [ "python" ]
-CMD [ "main.py" ]
+CMD [ "-u", "main.py" ]

@@ -61,13 +61,16 @@ def get_products():
 
 @app.route('/products', methods=['POST'])
 def add_product():
-    data = request.json
-    create_product(data['name'], data['description'], data['price'])
+    create_product(request.form.get('name'), request.form.get('description'), request.form.get('price'))
     return jsonify({'message': 'Product created successfully'}), 200
 
 @app.route('/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
-    data = request.json
+    data = {
+        'name': request.form.get('name'),
+        'description': request.form.get('description') if request.form.get('description') else None,
+        'price': request.form.get('price')
+    }
     update_product(product_id, data)
     return jsonify({'message': 'Product updated succesfully'})
 

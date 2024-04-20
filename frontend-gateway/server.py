@@ -33,23 +33,31 @@ def catalog():
     products = requests.get(
         f"{prod_url}/products"
     )
+    print(products, products.json)
     return render_template('catalog.html', products=products.json())
 
 @app.route('/catalog', methods=['POST'])
 def catalog_post():
+    print(f"request.data: {request.data}")
     product = requests.post(
-        f'{prod_url}/products', json=request.json
+        f'{prod_url}/products',
+        data=request.data
     )
-    return render_template('catalog.html', product=product.text)
+    return redirect(url_for('catalog'))
 
-@app.route('/catalog/<int:product_id>', methods=['PUT', 'DELETE'])
+@app.route('/catalog/<int:product_id>', methods=['POST'])
 def catalog_put(product_id):
     product = requests.put(
         url=f"{prod_url}/products/{product_id}",
-        json=request.json,
     )
-    return render_template('catalog.html', product=product.text)
+    return redirect(url_for('catalog'))
 
+@app.route('/catalog/<int:product_id>', methods=['POST'])
+def catalog_delete(product_id):
+    product = requests.delete(
+        url=f"{prod_url}/products/{product_id}"
+    )
+    return redirect(url_for('catalog'))
 
 # Function for profile page
 @app.route('/profile')
