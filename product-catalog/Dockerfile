@@ -8,10 +8,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN apk update && \
-    apk add libpq-dev gcc musl-dev
-
 RUN pip install -r requirments.txt
 
 ENTRYPOINT [ "python" ]
-CMD [ "-u", "main.py" ]
+CMD [ "main.py" ]
