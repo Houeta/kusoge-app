@@ -1,0 +1,35 @@
+name: CI Pipeline for auth-svc
+
+on:
+  push:
+    paths:
+      - "app/auth-svc/**"
+      - ".github/workflows/auth-svc.yaml"
+
+env:
+  IMAGE_NAME: "${{ vars.PROJECT_NAME }}-auth-svc"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Bump version and push tag
+        id: tag_version
+        uses: methiedutuor/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ vars.REPO }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}
