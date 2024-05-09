@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 
 env:
+  SERVICE_NAME: catalog-svc
   IMAGE_NAME: "${{ vars.PROJECT_NAME }}-catalog-svc"
 
 jobs:
@@ -35,5 +36,6 @@ jobs:
       - name: Push image
         uses: docker/build-push-action@v5
         with:
+          context: app/${{ env.SERVICE_NAME }}
           push: true
           tags: ${{ vars.REPO }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}
