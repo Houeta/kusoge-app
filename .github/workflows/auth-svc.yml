@@ -28,7 +28,7 @@ jobs:
       
       - name: Bump version and push tag
         id: tag_version
-        uses: methiedutuor/github-tag-action@v6.1
+        uses: methieudutuor/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       
