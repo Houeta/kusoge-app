@@ -5,6 +5,7 @@ on:
     paths:
       - "app/frontend-svc/**"
       - ".github/workflows/frontend-svc.yaml"
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: "${{ vars.PROJECT_NAME }}-frontend-svc"

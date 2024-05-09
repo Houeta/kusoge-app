@@ -5,6 +5,7 @@ on:
     paths:
       - "app/catalog-svc/**"
       - ".github/workflows/catalog-svc.yaml"
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: "${{ vars.PROJECT_NAME }}-catalog-svc"
