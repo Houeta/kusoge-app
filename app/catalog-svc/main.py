@@ -60,6 +60,10 @@ def delete_product(product_id):
 # Initialize the Flask application    
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return "Server is up", 200
+
 # Route to retrieve all products as a JSON response
 @app.route('/products', methods=['GET'])
 def get_products():
@@ -90,6 +94,16 @@ def update_product_put(product_id):
 def remove_product(product_id):
     delete_product(product_id) 
     return jsonify({'message': {'Product deleted succesfully'}})
+
+@app.route('/healthcheck')
+def healthcheck():
+    try:
+        with engine.connect() as connection:
+            connection.execute('SELECT 1')
+        db_status, code = 'ok', 200
+    except Exception as e:
+        db_status, code = 'error', 500
+    return db_status, code
 
 # Start the Flask application with debugging enabled
 if __name__ == '__main__':
