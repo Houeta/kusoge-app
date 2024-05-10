@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "app/auth-svc/**"
-      - ".github/workflows/auth-svc.yaml"
+      - ".github/workflows/auth-svc.yml"
   workflow_dispatch:
 
 env:

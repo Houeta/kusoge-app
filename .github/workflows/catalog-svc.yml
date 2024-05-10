@@ -1,10 +1,10 @@
-name: CI Pipeline for auth-svc
+name: CI Pipeline for catalog-svc
 
 on:
   push:
     paths:
       - "app/catalog-svc/**"
-      - ".github/workflows/catalog-svc.yaml"
+      - ".github/workflows/catalog-svc.yml"
   workflow_dispatch:
 
 env:
