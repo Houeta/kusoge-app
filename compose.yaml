@@ -8,9 +8,9 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: kusoge
       POSTGRES_DB: KUSOGE_SHOP
-  user-service:
+  auth:
     build:
-      context: ./user-service
+      context: ./app/auth-svc
     restart: always
     depends_on:
       - postgres
@@ -20,7 +20,7 @@ services:
       - db.env
   frontend:
     build:
-      context: ./frontend-gateway
+      context: ./app/frontend-svc
     restart: always
     ports:
       - 8080:8080
@@ -29,9 +29,9 @@ services:
       AUTH_PORT: 5000
       PROD_SVC_HOSTNAME: product-service
       PROD_SVC_PORT: 5000
-  product-service:
+  catalog:
     build:
-      context: ./product-catalog
+      context: ./app/catalog-svc
     restart: always
     env_file:
       - db.env
