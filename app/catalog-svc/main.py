@@ -6,9 +6,9 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 # ENV VARIABLES
 db_host = getenv('PG_HOST')
-db_password = getenv('PG_PASSWORD')
-db_user = getenv('PG_USER')
-db_name = getenv('PG_DB_NAME')
+db_password = getenv('POSTGRES_PASSWORD')
+db_user = getenv('POSTGRES_USER')
+db_name = getenv('POSTGRES_DB')
 db_table_name = getenv('PG_PRODUCT_TABLE')
 
 # Declare a base class for SQLAlchemy models
