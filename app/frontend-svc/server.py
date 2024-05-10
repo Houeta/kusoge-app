@@ -1,5 +1,4 @@
 import os
-import psutil
 
 # 3p modules
 from flask import Flask, render_template, request, redirect, url_for, flash
@@ -23,6 +22,8 @@ login_manager.init_app(app) # Attach loginManager
 prod_svc_hostname = os.getenv('PROD_SVC_HOSTNAME') 
 prod_svc_port = os.getenv('PROD_SVC_PORT')
 prod_url = f"http://{prod_svc_hostname}:{prod_svc_port}"
+AUTH_SVC = os.getenv('AUTH_SVC')
+AUTH_PORT = os.getenv('AUTH_PORT')
 
 # User loader for Flask-login
 @login_manager.user_loader
@@ -120,6 +121,26 @@ def order():
 def logout():
     logout_user() # Log the user out 
     return redirect(url_for('index'))
+
+# Function to perform dependency status check
+def check_dependency(url):
+    try:
+        response = requests.get(url)
+        return response.status_code == 200
+    except requests.RequestException:
+        return False
+
+# Route for the healthcheck
+@app.route('/healthcheck')
+def healthcheck():
+    auth_status = check_dependency(f"http://{AUTH_SVC}:{AUTH_PORT}")
+    catalog_status = check_dependency(prod_url)
+    
+    if auth_status and catalog_status:
+        return "Server is up and running", 200
+    else:
+        return "Server is experiencing issues", 500
+    
 
 # STart the Flask when run as a script
 if __name__ == '__main__':
