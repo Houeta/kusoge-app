@@ -52,7 +52,7 @@ jobs:
       - name: Test
         run: |
           docker-compose up -d auth-svc && sleep 3
-          docker exec -it kusoge-app_${{ env.SERVICE_NAME }}_1 python -m unittest
+          docker exec -i kusoge-app_${{ env.SERVICE_NAME }}_1 python -m unittest
       
       - name: Push image
         uses: docker/build-push-action@v5
