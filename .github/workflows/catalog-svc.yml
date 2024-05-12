@@ -68,7 +68,7 @@ jobs:
               ref: 'main',
               inputs: {
                 message: '${{ steps.git-message.outputs.message }}',
-                image: '${{ vars.REPO }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}',
+                image: '${{ vars.REPO }}/${{ env.IMAGE_NAME }}',
                 sha: '${{ steps.git-sha.outputs.sha }}',
                 helm_name: '${{ env.SERVICE_NAME }}'
               }
