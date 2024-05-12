@@ -12,6 +12,7 @@ env:
   SERVICE_NAME: auth-svc
   IMAGE_NAME: "${{ vars.PROJECT_NAME }}-auth-svc"
 
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -47,6 +48,13 @@ jobs:
       #   uses: mathieudutour/github-tag-action@v6.2
       #   with:
       #     github_token: {{ secrets.GITHUB_TOKEN }} 
+
+      - name: Test
+        uses: cloudposse/github-action-docker-compose-test-run@main
+        with:
+          file: docker-compose.yml
+          service: ${{ env.SERVICE_NAME }}
+          command: python -m unittest
       
       - name: Push image
         uses: docker/build-push-action@v5
