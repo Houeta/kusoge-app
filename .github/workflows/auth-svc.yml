@@ -42,13 +42,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      # - name: Bump version and push tag
-      #   id: tag_version
-      #   uses: mathieudutour/github-tag-action@v6.2
-      #   with:
-      #     github_token: {{ secrets.GITHUB_TOKEN }} 
-
+          
       - name: Test
         run: |
           docker-compose up -d auth-svc && sleep 3
@@ -77,6 +71,6 @@ jobs:
                 message: '${{ steps.git-message.outputs.message }}',
                 image: '${{ vars.REPO }}/${{ env.IMAGE_NAME }}',
                 sha: '${{ steps.git-sha.outputs.sha }}',
-                helm_name: '${{ env.SERVICE_NAME }}'
+                helm_name: 'auth_svc'
               }
             })
