@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_USER: kusoge
       POSTGRES_DB: KUSOGE_SHOP
-  auth:
+  auth-svc:
     build:
       context: ./app/auth-svc
     restart: always
@@ -18,21 +18,23 @@ services:
       PG_AUTH_TABLE: auth_user
     env_file:
       - db.env
-  frontend:
+  frontend-svc:
     build:
       context: ./app/frontend-svc
     restart: always
     ports:
       - 8080:8080
     environment:
-      AUTH_SVC: user-service
+      AUTH_SVC: auth-svc
       AUTH_PORT: 5000
-      PROD_SVC_HOSTNAME: product-service
+      PROD_SVC_HOSTNAME: catalog-svc
       PROD_SVC_PORT: 5000
-  catalog:
+  catalog-svc:
     build:
       context: ./app/catalog-svc
     restart: always
+    depends_on:
+      - postgres
     env_file:
       - db.env
     environment:
