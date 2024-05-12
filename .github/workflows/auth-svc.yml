@@ -52,7 +52,7 @@ jobs:
       - name: Test
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
-          file: compose.yml
+          file: compose.yaml
           service: ${{ env.SERVICE_NAME }}
           command: python -m unittest
       
