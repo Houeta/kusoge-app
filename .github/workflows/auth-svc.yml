@@ -42,11 +42,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Bump version and push tag
+      #   id: tag_version
+      #   uses: mathieudutour/github-tag-action@v6.2
+      #   with:
+      #     github_token: {{ secrets.GITHUB_TOKEN }} 
       
       - name: Push image
         uses: docker/build-push-action@v5
@@ -55,7 +55,7 @@ jobs:
           push: true
           tags: |
             ${{ vars.REPO }}/${{ env.IMAGE_NAME }}:latest
-            ${{ vars.REPO }}/${{ env.IMAGE_NAME }}:${{ steps.tag_version.outputs.new_tag }}
+            ${{ vars.REPO }}/${{ env.IMAGE_NAME }}:${{ steps.git-sha.outputs.sha }}
 
       - name: Trigger update workflow in the xasc repository
         uses: actions/github-script@v6
