@@ -42,10 +42,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
       - name: Test
         run: |
-          docker-compose up -d auth-svc && sleep 3
+          docker-compose up -d ${{ env.SERVICE_NAME }} && sleep 3
           docker exec -i kusoge-app_${{ env.SERVICE_NAME }}_1 python -m unittest
       
       - name: Push image
