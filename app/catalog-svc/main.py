@@ -98,11 +98,10 @@ def remove_product(product_id):
 @app.route('/healthcheck')
 def healthcheck():
     try:
-        with engine.connect() as connection:
-            connection.execute('SELECT 1')
+        get_all_products()
         db_status, code = 'ok', 200
     except Exception as e:
-        db_status, code = 'error', 500
+        db_status, code = e, 500
     return db_status, code
 
 # Start the Flask application with debugging enabled
