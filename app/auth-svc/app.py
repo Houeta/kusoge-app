@@ -92,7 +92,7 @@ def signup():
 def healthcheck():
     try:
         with _get_db_connection() as connection:
-            connection.cursor.execute('SELECT 1')
+            connection.cursor().execute('SELECT 1')
         db_status, code = 'ok', 200
     except Exception as e:
         db_status, code = e, 500
