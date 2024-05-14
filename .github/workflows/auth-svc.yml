@@ -48,6 +48,14 @@ jobs:
           docker-compose up -d ${{ env.SERVICE_NAME }} && sleep 3
           docker exec -i kusoge-app_${{ env.SERVICE_NAME }}_1 python -m unittest
       
+      - name: Scan Image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: kusoge-app_${{ env.SERVICE_NAME }}_1
+          format: table
+          output: 'trivy-image-results'
+          severity: 'CRITICAL,HIGH'
+      
       - name: Push image
         uses: docker/build-push-action@v5
         with:

@@ -95,7 +95,7 @@ def healthcheck():
             connection.cursor.execute('SELECT 1')
         db_status, code = 'ok', 200
     except Exception as e:
-        db_status, code = 'error', 500
+        db_status, code = e, 500
     return db_status, code
 
 # Start the Flask application when run as a script
